@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+
+group 'fr.enimaloc'
+version '0.0.1'
+
+subprojects {
+    group rootProject.group + "." + rootProject.name
+    version rootProject.version
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    sourceCompatibility = '16'
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    publishing {
+        publications {
+            //noinspection GroovyAssignabilityCheck
+            maven(MavenPublication) {
+                groupId = project.group
+                //noinspection GroovyAssignabilityCheck
+                artifactId = project.name
+                version = project.version
+
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                url 'https://m2.enimaloc.fr'
+                credentials {
+                    username = System.getenv('m2.username')
+                    password = System.getenv('m2.password')
+                }
+                authentication {
+                    //noinspection GroovyAssignabilityCheck
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+    }
+}
