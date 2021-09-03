@@ -1,3 +1,4 @@
 rootProject.name = 'enutils'
 include 'tuples'
+include 'classes'
 
